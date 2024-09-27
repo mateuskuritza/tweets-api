@@ -12,6 +12,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.UUID;
+
+import com.tweet.api.dtos.UserDTO;
+
 import java.util.List;
 
 @Entity
@@ -31,4 +34,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Tweet> tweets;
+
+    public User(UserDTO userDTO) {
+        this.avatarUrl = userDTO.avatarUrl();
+        this.username = userDTO.username();
+    }
 }
