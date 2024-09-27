@@ -1,5 +1,6 @@
 package com.tweet.api.services;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,5 +29,9 @@ public class TweetService {
             return tweetRepository.save(new Tweet(tweetDTO, user.get())).getId();
 
         return null;
+    }
+
+    public List<TweetDTO> getTweetsByUserId(UUID userId) {
+        return tweetRepository.findByUserId(userId).stream().map(TweetDTO::new).toList();
     }
 }
