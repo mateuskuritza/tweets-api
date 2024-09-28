@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tweet.api.dtos.TweetDTO;
@@ -37,8 +37,7 @@ public class TweetService {
         return tweetRepository.findByUserId(userId).stream().map(TweetDTO::new).toList();
     }
 
-    public Page<TweetDTO> getTweets(int page) {
-        int pageSize = 5;
-        return tweetRepository.findAll(PageRequest.of(page, pageSize)).map(TweetDTO::new);
+    public Page<TweetDTO> getTweets(Pageable page) {
+        return tweetRepository.findAll(page).map(TweetDTO::new);
     }
 }
