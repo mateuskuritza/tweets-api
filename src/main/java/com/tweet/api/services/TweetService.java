@@ -30,6 +30,7 @@ public class TweetService {
         if (user.isPresent())
             return tweetRepository.save(new Tweet(tweetDTO, user.get())).getId();
 
+        // TODO: Handle user not found, should throw an exception
         return null;
     }
 
