@@ -12,14 +12,14 @@ import com.tweet.api.repositories.UserRepository;
 
 import java.util.UUID;
 
-@SpringBootTest // Carrega o contexto completo do Spring
+@SpringBootTest
 class UserServiceTest {
 
         @Autowired
-        UserService userService;
+        private UserService userService;
 
         @Autowired
-        UserRepository userRepository; // Usa o repositório real
+        private UserRepository userRepository;
 
         @Test
         void signUp() {
