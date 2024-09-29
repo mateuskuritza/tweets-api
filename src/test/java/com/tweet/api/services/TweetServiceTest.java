@@ -79,6 +79,18 @@ class TweetServiceTest {
     }
 
     @Test
+    void getTweetsByUserIdShouldReturnEmptyArrayIfUserDoesntExists() {
+        User user = new User("John Doe", "https://example.com/avatar.jpg");
+        userRepository.save(user);
+
+        TweetDTO tweet = new TweetDTO(user.getId(), "Hello, World!");
+        tweetService.createTweet(tweet);
+
+        assertEquals(1, tweetRepository.count());
+        assertEquals(0, tweetService.getTweetsByUserId(UUID.randomUUID()).size());
+    }
+
+    @Test
     void getTweets() {
         User user = new User("John Doe", "https://example.com/avatar.jpg");
         userRepository.save(user);
