@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.tweet.api.dtos.TweetDTO;
 import com.tweet.api.models.Tweet;
@@ -74,5 +76,25 @@ class TweetServiceTest {
 
         assertEquals(3, tweetRepository.count());
         assertEquals(2, tweetService.getTweetsByUserId(user.getId()).size());
+    }
+
+    @Test
+    void getTweets() {
+        User user = new User("John Doe", "https://example.com/avatar.jpg");
+        userRepository.save(user);
+
+        final int totalTweets = 11;
+        for (int i = 0; i < totalTweets; i++) {
+            TweetDTO tweetDTO = new TweetDTO(user.getId(), "Hello, World!");
+            tweetService.createTweet(tweetDTO);
+        }
+
+        final int pageSize = totalTweets - 1;
+        Page<TweetDTO> tweets = tweetService.getTweets(Pageable.ofSize(pageSize));
+
+        assertEquals(totalTweets, tweetRepository.count());
+        assertEquals(pageSize, tweets.getSize());
+        assertEquals(totalTweets, tweets.getTotalElements());
+        assertEquals(2, tweets.getTotalPages());
     }
 }
