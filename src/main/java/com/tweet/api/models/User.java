@@ -39,4 +39,9 @@ public class User {
         this.avatarUrl = userDTO.avatarUrl();
         this.username = userDTO.username();
     }
+
+    public User(String username, String avatarUrl) {
+        this.username = username;
+        this.avatarUrl = avatarUrl;
+    }
 }
