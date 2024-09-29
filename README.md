@@ -6,7 +6,7 @@ I started learning Java with this project. Below are listed the features that I 
 - [X] Data persistence (JPA) with Postgres using Docker when developing
 - [X] DTO`s and Validation
 - [X] Page/Pageable
-- [ ] E2E tests (using in memory H2 database)
+- [X] Tests to services using in memory H2 database
 - [X] Docs with Swagger: Available in SERVER_URL:PORT/swagger-ui/index.html (e.g. http://localhost:8080/swagger-ui/index.html)
 - [ ] Database migrations
 - [ ] Exceptions Treatment
