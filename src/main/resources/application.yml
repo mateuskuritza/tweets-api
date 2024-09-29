@@ -2,9 +2,9 @@ spring:
     application:
         name: api
     datasource:
-        url: jdbc:postgres://localhost:5432/tweet-db
-        username: postgres
-        password: postgres
+        url: ${DATABASE_URL:jdbc:postgres://localhost:5432/tweet-db}
+        username: ${POSTGRES_USER:postgres}
+        password: ${POSTGRES_PASSWORD:postgres}
         driver-class-name: org.postgresql.Driver
     jpa:
         hibernate:
@@ -15,8 +15,8 @@ spring:
                 format_sql: true
     flyway:
         enabled: true
-        baseline-on-migrate: true   
+        baseline-on-migrate: true
 
 server:
-    port: 8080
+    port: ${SERVER_PORT:8080}
     
