@@ -9,7 +9,7 @@ I started learning Java with this project. Below are listed the features that I 
 - [X] Tests to services using in memory H2 database
 - [X] Docs with Swagger: Available in SERVER_URL:PORT/swagger-ui/index.html (e.g. http://localhost:8080/swagger-ui/index.html)
 - [X] Database migrations (Flyway)
-- [ ] Exceptions Treatment
+- [X] Exceptions Treatment - (GlobalExceptionHandler)
 - [ ] Authentication: Maybe using Spring Security, JWT, AWS Cognito and/or Keycloack (must be role based)
 - [ ] Terraform to provide AWS infra (vpc, subnet, database, ec2 or k8, etc.)
 - [ ] Jenkins (ci and cd)
