@@ -57,4 +57,22 @@ class TweetServiceTest {
         assertEquals(0, tweetRepository.count());
         assertEquals(null, tweetId);
     }
+
+    @Test
+    void getTweetsByUserId() {
+        User user = new User("John Doe", "https://example.com/avatar.jpg");
+        User anotherUser = new User("John Doe", "https://example.com/avatar.jpg");
+        userRepository.save(user);
+        userRepository.save(anotherUser);
+
+        TweetDTO firstTweetFromUser = new TweetDTO(user.getId(), "Hello, World!");
+        TweetDTO secondTweetFromUser = new TweetDTO(user.getId(), "Hello, World!");
+        TweetDTO tweetFromAnotherUser = new TweetDTO(anotherUser.getId(), "Hello, World!");
+        tweetService.createTweet(firstTweetFromUser);
+        tweetService.createTweet(secondTweetFromUser);
+        tweetService.createTweet(tweetFromAnotherUser);
+
+        assertEquals(3, tweetRepository.count());
+        assertEquals(2, tweetService.getTweetsByUserId(user.getId()).size());
+    }
 }
