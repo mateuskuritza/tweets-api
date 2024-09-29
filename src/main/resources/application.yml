@@ -1,0 +1,22 @@
+spring:
+    application:
+        name: api
+    datasource:
+        url: jdbc:postgres://localhost:5432/tweet-db
+        username: postgres
+        password: postgres
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+    flyway:
+        enabled: true
+        baseline-on-migrate: true   
+
+server:
+    port: 8080
+    
