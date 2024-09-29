@@ -16,6 +16,8 @@ import com.tweet.api.models.User;
 import com.tweet.api.repositories.TweetRepository;
 import com.tweet.api.repositories.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @SpringBootTest
 class TweetServiceTest {
     @Autowired
@@ -38,26 +40,29 @@ class TweetServiceTest {
         User user = new User("John Doe", "https://example.com/avatar.jpg");
         userRepository.save(user);
 
-        TweetDTO tweetDTO = new TweetDTO(user.getId(), "Hello, World!");
+        TweetDTO tweetDTO = new TweetDTO(user.getId().toString(), "Hello, World!");
 
-        final UUID tweetId = tweetService.createTweet(tweetDTO);
+        tweetService.createTweet(tweetDTO);
 
         assertEquals(1, tweetRepository.count());
 
-        final Tweet tweet = tweetRepository.findById(tweetId).get();
-        assertEquals(tweetDTO.userId(), user.getId());
+        final Tweet tweet = tweetRepository.findAll().get(0);
+        assertEquals(tweet.getUser().getId(), user.getId());
         assertEquals(tweetDTO.content(), tweet.getText());
     }
 
     @Test
     void shouldNotCreateTweetIfUserNotExists() {
         UUID fakeUserId = UUID.randomUUID();
-        TweetDTO tweetDTO = new TweetDTO(fakeUserId, "Hello, World!");
+        TweetDTO tweetDTO = new TweetDTO(fakeUserId.toString(), "Hello, World!");
 
-        final UUID tweetId = tweetService.createTweet(tweetDTO);
-
-        assertEquals(0, tweetRepository.count());
-        assertEquals(null, tweetId);
+        try {
+            tweetService.createTweet(tweetDTO);
+        } catch (EntityNotFoundException e) {
+            assertEquals(0, tweetRepository.count());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Test
@@ -67,9 +72,9 @@ class TweetServiceTest {
         userRepository.save(user);
         userRepository.save(anotherUser);
 
-        TweetDTO firstTweetFromUser = new TweetDTO(user.getId(), "Hello, World!");
-        TweetDTO secondTweetFromUser = new TweetDTO(user.getId(), "Hello, World!");
-        TweetDTO tweetFromAnotherUser = new TweetDTO(anotherUser.getId(), "Hello, World!");
+        TweetDTO firstTweetFromUser = new TweetDTO(user.getId().toString(), "Hello, World!");
+        TweetDTO secondTweetFromUser = new TweetDTO(user.getId().toString(), "Hello, World!");
+        TweetDTO tweetFromAnotherUser = new TweetDTO(anotherUser.getId().toString(), "Hello, World!");
         tweetService.createTweet(firstTweetFromUser);
         tweetService.createTweet(secondTweetFromUser);
         tweetService.createTweet(tweetFromAnotherUser);
@@ -83,7 +88,7 @@ class TweetServiceTest {
         User user = new User("John Doe", "https://example.com/avatar.jpg");
         userRepository.save(user);
 
-        TweetDTO tweet = new TweetDTO(user.getId(), "Hello, World!");
+        TweetDTO tweet = new TweetDTO(user.getId().toString(), "Hello, World!");
         tweetService.createTweet(tweet);
 
         assertEquals(1, tweetRepository.count());
@@ -97,7 +102,7 @@ class TweetServiceTest {
 
         final int totalTweets = 11;
         for (int i = 0; i < totalTweets; i++) {
-            TweetDTO tweetDTO = new TweetDTO(user.getId(), "Hello, World!");
+            TweetDTO tweetDTO = new TweetDTO(user.getId().toString(), "Hello, World!");
             tweetService.createTweet(tweetDTO);
         }
 

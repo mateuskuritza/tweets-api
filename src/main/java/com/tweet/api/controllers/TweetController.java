@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tweet.api.dtos.TweetDTO;
 import com.tweet.api.services.TweetService;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -34,14 +35,15 @@ public class TweetController {
     @PostMapping()
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<String> createTweet(@RequestBody @Valid TweetDTO tweetDTO) {
-        UUID tweetId = tweetService.createTweet(tweetDTO);
-
-        if (tweetId != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Tweet created with id " + tweetId);
+        try {
+            tweetService.createTweet(tweetDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Tweet created");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User with id " + tweetDTO.userId() + " not found");
+        } catch (Exception e) {
+            throw e;
         }
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("User with id " + tweetDTO.userId() + " not found");
     }
 
     @GetMapping("{userId}")

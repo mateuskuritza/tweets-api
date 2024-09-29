@@ -1,7 +1,6 @@
 package com.tweet.api.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -10,9 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.tweet.api.dtos.TweetDTO;
 import com.tweet.api.models.Tweet;
-import com.tweet.api.models.User;
 import com.tweet.api.repositories.TweetRepository;
 import com.tweet.api.repositories.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class TweetService {
@@ -24,14 +24,11 @@ public class TweetService {
         this.userRepository = userRepository;
     }
 
-    public UUID createTweet(TweetDTO tweetDTO) {
-        Optional<User> user = userRepository.findById(tweetDTO.userId());
-
-        if (user.isPresent())
-            return tweetRepository.save(new Tweet(tweetDTO, user.get())).getId();
-
-        // TODO: Handle user not found, should throw an exception
-        return null;
+    public void createTweet(TweetDTO tweetDTO) {
+        userRepository.findById(UUID.fromString(tweetDTO.userId()))
+                .ifPresentOrElse(user -> tweetRepository.save(new Tweet(tweetDTO, user)), () -> {
+                    throw new EntityNotFoundException();
+                });
     }
 
     public List<TweetDTO> getTweetsByUserId(UUID userId) {
